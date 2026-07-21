@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Wishlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <header class="site-header">
+    <div class="mark"><i class="ph ph-gift"></i></div>
+    <h1 id="title">Birthday Wishlist</h1>
+    <p id="subtitle">Claim a gift so no one else buys the same thing</p>
+  </header>
+  <main>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty-state" style="display:none;">
+      <div class="icon"><i class="ph ph-gift"></i></div>
+      <p>No items yet. Check back soon.</p>
+      <a href="builder.html">Add the first item</a>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <a class="manage-link" href="builder.html"><i class="ph ph-pencil-simple"></i> Manage items</a>
+  </footer>
+</div>
+<script src="app.js"></script>
+<script>
+async function loadWishlist() {
+  const items = await api.list();
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  grid.innerHTML = '';
+  if (!items.length) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
+  for (const item of items) {
+    grid.appendChild(renderCard(item));
+  }
+}
+
+function renderCard(item) {
+  const card = document.createElement('div');
+  card.className = 'card' + (item.claimed ? ' claimed' : '');
+
+  if (item.image) {
+    const img = document.createElement('img');
+    img.src = item.image;
+    img.alt = item.name;
+    card.appendChild(img);
+  } else {
+    const fallback = document.createElement('div');
+    fallback.className = 'img-fallback';
+    fallback.innerHTML = '<i class="ph ph-gift"></i>';
+    card.appendChild(fallback);
+  }
+
+  const name = document.createElement('div');
+  name.className = 'name';
+  if (item.link) {
+    const a = document.createElement('a');
+    a.href = item.link;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = item.name;
+    name.appendChild(a);
+  } else {
+    name.textContent = item.name;
+  }
+  card.appendChild(name);
+
+  if (item.price) {
+    const price = document.createElement('div');
+    price.className = 'price';
+    price.textContent = item.price;
+    card.appendChild(price);
+  }
+
+  if (item.notes) {
+    const notes = document.createElement('div');
+    notes.className = 'notes';
+    notes.textContent = item.notes;
+    card.appendChild(notes);
+  }
+
+  const btn = document.createElement('button');
+  btn.className = 'claim-btn' + (item.claimed ? ' claimed' : '');
+  btn.innerHTML = item.claimed
+    ? '<i class="ph ph-check"></i> Claimed'
+    : '<i class="ph ph-gift"></i> Claim gift';
+  btn.onclick = async () => {
+    btn.disabled = true;
+    await api.claim(item.id, !item.claimed);
+    await loadWishlist();
+  };
+  card.appendChild(btn);
+
+  return card;
+}
+
+loadWishlist();
+</script>
+</body>
+</html>

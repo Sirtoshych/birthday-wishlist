@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wishlist Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <header class="builder-header">
+    <a class="back-link" href="index.html"><i class="ph ph-arrow-left"></i> Back to wishlist</a>
+    <h1>Wishlist Builder</h1>
+  </header>
+  <main>
+    <form class="item-form" id="form">
+      <div class="field">
+        <label for="name">Item name</label>
+        <input id="name" placeholder="e.g. Espresso Machine" required>
+      </div>
+      <div class="field">
+        <label for="link">Link</label>
+        <input id="link" placeholder="https://" type="url">
+      </div>
+      <div class="field">
+        <label for="image">Image URL</label>
+        <input id="image" placeholder="https://" type="url">
+      </div>
+      <div class="field">
+        <label for="price">Price</label>
+        <input id="price" placeholder="e.g. $150">
+      </div>
+      <div class="field">
+        <label for="notes">Notes</label>
+        <textarea id="notes" placeholder="Size, color, anything helpful" rows="2"></textarea>
+      </div>
+      <button type="submit"><i class="ph ph-plus"></i> Add item</button>
+    </form>
+
+    <p class="list-heading">Items</p>
+    <div id="list"></div>
+  </main>
+</div>
+<script src="app.js"></script>
+<script>
+const form = document.getElementById('form');
+const listEl = document.getElementById('list');
+
+async function loadList() {
+  const items = await api.list();
+  listEl.innerHTML = '';
+  if (!items.length) {
+    const empty = document.createElement('p');
+    empty.className = 'builder-empty';
+    empty.textContent = 'No items yet. Add your first one above.';
+    listEl.appendChild(empty);
+    return;
+  }
+  for (const item of items) {
+    listEl.appendChild(renderRow(item));
+  }
+}
+
+function renderRow(item) {
+  const row = document.createElement('div');
+  row.className = 'builder-row';
+
+  if (item.image) {
+    const img = document.createElement('img');
+    img.src = item.image;
+    img.alt = item.name;
+    row.appendChild(img);
+  } else {
+    const fallback = document.createElement('div');
+    fallback.className = 'img-fallback';
+    fallback.innerHTML = '<i class="ph ph-gift"></i>';
+    row.appendChild(fallback);
+  }
+
+  const info = document.createElement('div');
+  info.className = 'info';
+  const n = document.createElement('div');
+  n.className = 'n';
+  n.textContent = item.name;
+  if (item.claimed) {
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.textContent = '  · Claimed';
+    n.appendChild(tag);
+  }
+  const p = document.createElement('div');
+  p.className = 'p';
+  p.textContent = [item.price, item.notes].filter(Boolean).join(' · ');
+  info.appendChild(n);
+  info.appendChild(p);
+  row.appendChild(info);
+
+  const delBtn = document.createElement('button');
+  delBtn.className = 'delete';
+  delBtn.innerHTML = '<i class="ph ph-trash"></i>';
+  delBtn.setAttribute('aria-label', 'Delete ' + item.name);
+  delBtn.onclick = async () => {
+    if (!confirm('Delete "' + item.name + '"?')) return;
+    await api.remove(item.id);
+    loadList();
+  };
+  row.appendChild(delBtn);
+
+  return row;
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  if (!name) return;
+  await api.add({
+    name,
+    link: document.getElementById('link').value.trim(),
+    image: document.getElementById('image').value.trim(),
+    price: document.getElementById('price').value.trim(),
+    notes: document.getElementById('notes').value.trim()
+  });
+  form.reset();
+  loadList();
+});
+
+loadList();
+</script>
+</body>
+</html>
