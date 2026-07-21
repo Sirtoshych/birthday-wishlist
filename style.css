@@ -4,14 +4,13 @@
   --ink: #18171c;
   --muted: #6f6e76;
   --muted-2: #9a99a1;
-  --accent: #c23b57;
+  --accent: #3a5ba9;
   --accent-ink: #ffffff;
-  --accent-wash: #c23b571a;
+  --accent-wash: #3a5ba91a;
   --border: #e7e6e2;
   --claimed-fill: #edece8;
-  --radius-card: 18px;
-  --radius-input: 10px;
-  --radius-pill: 999px;
+  --radius-card: 8px;
+  --radius-input: 6px;
   --font-display: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -43,21 +42,8 @@ body {
 /* ---- Header ---- */
 
 .site-header {
-  padding: 3.5rem 0 2.25rem;
+  padding: 3rem 0 2.25rem;
   text-align: center;
-}
-
-.mark {
-  width: 44px;
-  height: 44px;
-  margin: 0 auto 1.25rem;
-  border-radius: var(--radius-pill);
-  background: var(--accent-wash);
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
 }
 
 .site-header h1 {
@@ -65,13 +51,7 @@ body {
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   font-weight: 600;
   letter-spacing: -0.01em;
-  margin: 0 0 0.5rem;
-}
-
-.site-header p {
   margin: 0;
-  color: var(--muted);
-  font-size: 1rem;
 }
 
 /* ---- Wishlist grid ---- */
@@ -120,7 +100,7 @@ main {
   width: 100%;
   height: 150px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 6px;
 }
 
 .card .img-fallback {
@@ -178,7 +158,7 @@ main {
 .card .claim-btn {
   margin-top: auto;
   border: none;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-input);
   padding: 0.7rem 1rem;
   font-family: var(--font-body);
   font-size: 0.92rem;
@@ -224,7 +204,7 @@ main {
   width: 52px;
   height: 52px;
   margin: 0 auto 1rem;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-input);
   background: var(--accent-wash);
   color: var(--accent);
   display: flex;
@@ -234,37 +214,7 @@ main {
 }
 
 .empty-state p {
-  margin: 0 0 1rem;
-}
-
-.empty-state a {
-  color: var(--accent);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.empty-state a:hover {
-  text-decoration: underline;
-}
-
-/* ---- Footer / manage link ---- */
-
-.site-footer {
-  padding: 1rem 0 2.5rem;
-  text-align: center;
-}
-
-.manage-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  color: var(--muted-2);
-  font-size: 0.85rem;
-  text-decoration: none;
-}
-
-.manage-link:hover {
-  color: var(--accent);
+  margin: 0;
 }
 
 /* ---- Builder page ---- */
@@ -347,7 +297,7 @@ form.item-form textarea {
 
 form.item-form button {
   border: none;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-input);
   padding: 0.75rem;
   font-family: var(--font-body);
   font-weight: 600;
@@ -385,7 +335,7 @@ form.item-form button:active {
   gap: 0.85rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-card);
   padding: 0.7rem 0.9rem;
   margin-bottom: 0.6rem;
 }
@@ -395,7 +345,7 @@ form.item-form button:active {
   width: 46px;
   height: 46px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: var(--radius-input);
   flex-shrink: 0;
 }
 
@@ -436,7 +386,7 @@ form.item-form button:active {
   color: var(--muted-2);
   width: 34px;
   height: 34px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-input);
   display: flex;
   align-items: center;
   justify-content: center;
