@@ -2,6 +2,7 @@
 
 Static wishlist page with a "claim a gift" button and a builder page for
 adding items, backed by Cloudflare Pages Functions + KV (all free tier).
+KV binding is declared in `wrangler.jsonc`.
 
 ## Files
 
